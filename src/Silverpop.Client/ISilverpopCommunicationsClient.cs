@@ -6,9 +6,9 @@ namespace Silverpop.Client
 {
     public interface ISilverpopCommunicationsClient : IDisposable
     {
-        string HttpUpload(string data, bool tryRefreshingOAuthAccessToken = true);
+        string HttpUpload(string data, bool tryRefreshingOAuthAccessToken = true, bool useXMLAPI = false, string XMLAPISession = "");
 
-        Task<string> HttpUploadAsync(string data, bool tryRefreshingOAuthAccessToken = true);
+        Task<string> HttpUploadAsync(string data, bool tryRefreshingOAuthAccessToken = true, bool useXMLAPI = false, string XMLAPISession = "");
 
         void SftpCreateDirectoryIfNotExists(string path);
 

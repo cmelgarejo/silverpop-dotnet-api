@@ -17,6 +17,7 @@ namespace Silverpop.Client
         private readonly TransactClientConfiguration _configuration;
         private readonly AccessTokenProvider _accessTokenProvider;
         private readonly string _transactHttpsUrl;
+        private readonly string _XMLAPIHttpsUrl;
         private readonly Func<HttpClient> _httpClientFactory;
         private readonly Func<SftpClient> _sftpConnectedClientFactory;
 
@@ -27,6 +28,10 @@ namespace Silverpop.Client
 
             _transactHttpsUrl = string.Format(
                 "https://transact{0}.silverpop.com/XTMail",
+                configuration.PodNumber);
+
+            _XMLAPIHttpsUrl = string.Format(
+                "https://api{0}.silverpop.com/XMLAPI",
                 configuration.PodNumber);
 
             _httpClientFactory = () => new HttpClient();
@@ -45,7 +50,7 @@ namespace Silverpop.Client
                     username = "oauth";
                     password = _accessTokenProvider.Get();
                 }
-                
+
                 if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 {
                     throw new InvalidOperationException(
@@ -64,15 +69,16 @@ namespace Silverpop.Client
             };
         }
 
-        public string HttpUpload(string data, bool tryRefreshingOAuthAccessToken = true)
+        public string HttpUpload(string data, bool tryRefreshingOAuthAccessToken = true, bool useXMLAPI = false, string XMLAPISession = "")
         {
             var httpClient = GetAuthorizedHttpClient();
-
+            string httpsURL = useXMLAPI ? _XMLAPIHttpsUrl + XMLAPISession : _transactHttpsUrl;
+            string mediaType = useXMLAPI ? "text/xml" : "application/x-www-form-urlencoded";
             if (OAuthSpecified())
             {
                 try
                 {
-                    var response = httpClient.PostAsync(_transactHttpsUrl, new StringContent(data))
+                    var response = httpClient.PostAsync(httpsURL, new StringContent(data, Encoding.UTF8, mediaType))
                         .ConfigureAwait(false).GetAwaiter().GetResult();
                     return response.Content.ReadAsStringAsync()
                         .ConfigureAwait(false).GetAwaiter().GetResult();
@@ -93,7 +99,7 @@ namespace Silverpop.Client
             }
             else
             {
-                var response = httpClient.PostAsync(_transactHttpsUrl, new StringContent(data))
+                var response = httpClient.PostAsync(httpsURL, new StringContent(data, Encoding.UTF8, mediaType))
                     .ConfigureAwait(false).GetAwaiter().GetResult();
 
                 return response.Content.ReadAsStringAsync()
@@ -101,16 +107,17 @@ namespace Silverpop.Client
             }
         }
 
-        public async Task<string> HttpUploadAsync(string data, bool tryRefreshingOAuthAccessToken = true)
+        public async Task<string> HttpUploadAsync(string data, bool tryRefreshingOAuthAccessToken = true, bool useXMLAPI = false, string XMLAPISession = "")
         {
             var httpClient = await GetAuthorizedHttpClientAsync().ConfigureAwait(false);
-
+            string httpsURL = useXMLAPI ? _XMLAPIHttpsUrl + XMLAPISession : _transactHttpsUrl;
+            string mediaType = useXMLAPI ? "text/xml" : "application/x-www-form-urlencoded";
             if (OAuthSpecified())
             {
                 ExceptionDispatchInfo capturedException = null;
                 try
                 {
-                    var response = await httpClient.PostAsync(_transactHttpsUrl, new StringContent(data));
+                    var response = await httpClient.PostAsync(httpsURL, new StringContent(data, Encoding.UTF8, mediaType));
                     return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
                 catch (WebException ex)
@@ -139,7 +146,7 @@ namespace Silverpop.Client
             }
             else
             {
-                var response = await httpClient.PostAsync(_transactHttpsUrl, new StringContent(data)).ConfigureAwait(false);
+                var response = await httpClient.PostAsync(httpsURL, new StringContent(data, Encoding.UTF8, mediaType)).ConfigureAwait(false);
                 return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
         }

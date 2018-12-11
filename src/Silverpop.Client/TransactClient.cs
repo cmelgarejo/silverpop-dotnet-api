@@ -1,12 +1,12 @@
-﻿using Silverpop.Client.Extensions;
-using Silverpop.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Silverpop.Client.Extensions;
+using Silverpop.Core;
+using Silverpop.Core.XML;
 
 namespace Silverpop.Client
 {
@@ -22,6 +22,10 @@ namespace Silverpop.Client
 
         private readonly TransactMessageEncoder _encoder;
         private readonly TransactMessageResponseDecoder _decoder;
+        private readonly AddRecipientEncoder _addRecipientEncoder;
+        private readonly AddRecipientResponseDecoder _addRecipientDecoder;
+        private readonly LoginEncoder _loginEncoder;
+        private readonly LoginResponseDecoder _loginDecoder;
         private readonly Func<ISilverpopCommunicationsClient> _silverpopFactory;
 
         public TransactClient(TransactClientConfiguration configuration)
@@ -29,6 +33,10 @@ namespace Silverpop.Client
                 configuration,
                 new TransactMessageEncoder(),
                 new TransactMessageResponseDecoder(),
+                new AddRecipientEncoder(),
+                new AddRecipientResponseDecoder(),
+                new LoginEncoder(),
+                new LoginResponseDecoder(),
                 () => new SilverpopCommunicationsClient(configuration))
         {
         }
@@ -37,15 +45,83 @@ namespace Silverpop.Client
             TransactClientConfiguration configuration,
             TransactMessageEncoder encoder,
             TransactMessageResponseDecoder decoder,
+            AddRecipientEncoder addRecipientEncoder,
+            AddRecipientResponseDecoder addRecipientDecoder,
+            LoginEncoder loginEncoder,
+            LoginResponseDecoder loginDecoder,
             Func<ISilverpopCommunicationsClient> silverpopFactory)
         {
             Configuration = configuration;
             _encoder = encoder;
             _decoder = decoder;
+            _addRecipientEncoder = addRecipientEncoder;
+            _addRecipientDecoder = addRecipientDecoder;
+            _loginEncoder = loginEncoder;
+            _loginDecoder = loginDecoder;
             _silverpopFactory = silverpopFactory;
         }
 
         public TransactClientConfiguration Configuration { get; private set; }
+
+        public string XMLAPISession { get; set; }
+
+        private void CheckLogin()
+        {
+            if (XMLAPISession == null)
+            {
+                var login = new Login() { Username = Configuration.Username, Password = Configuration.Password };
+
+                var encodedRecipient = _loginEncoder.Encode(login);
+
+                string response;
+                using (var silverpop = _silverpopFactory())
+                {
+                    response = silverpop.HttpUpload(encodedRecipient, true, true);
+                }
+
+                var decodedResponse = _loginDecoder.Decode(response);
+
+                XMLAPISession = decodedResponse.Success ? decodedResponse.SessionEncoding : null;
+            }
+        }
+
+        public virtual AddRecipientResponse AddRecipient(AddRecipient contact)
+        {
+            if (contact == null) throw new ArgumentNullException("contact");
+
+            CheckLogin();
+
+            var encodedRecipient = _addRecipientEncoder.Encode(contact);
+
+            string response;
+            using (var silverpop = _silverpopFactory())
+            {
+                response = silverpop.HttpUpload(encodedRecipient, true, true, XMLAPISession);
+            }
+
+            var decodedResponse = _addRecipientDecoder.Decode(response);
+
+            return decodedResponse;
+        }
+
+        public virtual async Task<AddRecipientResponse> addRecipientAsync(AddRecipient contact)
+        {
+            if (contact == null) throw new ArgumentNullException("contact");
+
+            CheckLogin();
+
+            var encodedRecipient = _addRecipientEncoder.Encode(contact);
+
+            string response;
+            using (var silverpop = _silverpopFactory())
+            {
+                response = await silverpop.HttpUploadAsync(encodedRecipient, true, true, XMLAPISession).ConfigureAwait(false);
+            }
+
+            var decodedResponse = _addRecipientDecoder.Decode(response);
+
+            return decodedResponse;
+        }
 
         public virtual TransactMessageResponse SendMessage(TransactMessage message)
         {
