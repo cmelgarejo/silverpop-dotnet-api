@@ -27,11 +27,11 @@ namespace Silverpop.Client
             _accessTokenProvider = new AccessTokenProvider(configuration);
 
             _transactHttpsUrl = string.Format(
-                "https://transact{0}.silverpop.com/XTMail",
+                "https://transact{0}.ibmmarketingcloud.com/XTMail",
                 configuration.PodNumber);
 
             _XMLAPIHttpsUrl = string.Format(
-                "https://api{0}.silverpop.com/XMLAPI",
+                "https://api{0}.ibmmarketingcloud.com/XMLAPI",
                 configuration.PodNumber);
 
             _httpClientFactory = () => new HttpClient();
@@ -59,7 +59,7 @@ namespace Silverpop.Client
                 }
 
                 var sftpClient = new SftpClient(
-                    $"transfer{configuration.PodNumber}.silverpop.com",
+                    $"transfer{configuration.PodNumber}.ibmmarketingcloud.com",
                     username,
                     password);
 
@@ -74,11 +74,12 @@ namespace Silverpop.Client
             var httpClient = GetAuthorizedHttpClient();
             string httpsURL = useXMLAPI ? _XMLAPIHttpsUrl + XMLAPISession : _transactHttpsUrl;
             string mediaType = useXMLAPI ? "text/xml" : "application/x-www-form-urlencoded";
+            var content = useXMLAPI ? new StringContent(data, Encoding.UTF8, mediaType) : new StringContent(data);
             if (OAuthSpecified())
             {
                 try
                 {
-                    var response = httpClient.PostAsync(httpsURL, new StringContent(data, Encoding.UTF8, mediaType))
+                    var response = httpClient.PostAsync(httpsURL, content)
                         .ConfigureAwait(false).GetAwaiter().GetResult();
                     return response.Content.ReadAsStringAsync()
                         .ConfigureAwait(false).GetAwaiter().GetResult();
@@ -99,9 +100,8 @@ namespace Silverpop.Client
             }
             else
             {
-                var response = httpClient.PostAsync(httpsURL, new StringContent(data, Encoding.UTF8, mediaType))
+                var response = httpClient.PostAsync(httpsURL, content)
                     .ConfigureAwait(false).GetAwaiter().GetResult();
-
                 return response.Content.ReadAsStringAsync()
                     .ConfigureAwait(false).GetAwaiter().GetResult();
             }

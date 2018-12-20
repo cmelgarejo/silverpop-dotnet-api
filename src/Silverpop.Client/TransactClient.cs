@@ -89,7 +89,7 @@ namespace Silverpop.Client
         {
             if (contact == null) throw new ArgumentNullException("contact");
 
-            CheckLogin();
+            //CheckLogin();
 
             var encodedRecipient = _addRecipientEncoder.Encode(contact);
 
@@ -108,7 +108,7 @@ namespace Silverpop.Client
         {
             if (contact == null) throw new ArgumentNullException("contact");
 
-            CheckLogin();
+            //CheckLogin();
 
             var encodedRecipient = _addRecipientEncoder.Encode(contact);
 

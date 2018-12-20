@@ -14,6 +14,7 @@ namespace Silverpop.Core.XML
         }
         public AddRecipient()
         {
+            Columns = new List<KeyValuePair<string, string>>();
             SyncFields = new List<KeyValuePair<string, string>>();
         }
 
@@ -22,6 +23,8 @@ namespace Silverpop.Core.XML
         public int CreatedFrom { get; set; }
 
         public bool UpdateIfFound { get; set; }
+
+        public ICollection<KeyValuePair<string, string>> Columns { get; set; }
 
         public ICollection<KeyValuePair<string, string>> SyncFields { get; set; }
 
@@ -35,12 +38,13 @@ namespace Silverpop.Core.XML
             return new AddRecipient()
             {
                 DatabaseId = contact.DatabaseId,
+                Columns = contact.Columns,
                 UpdateIfFound = contact.UpdateIfFound,
-                SyncFields = contact.SyncFields,
+                SyncFields = contact.SyncFields
             };
         }
 
-        public static AddRecipient Create(string databaseId, CreatedFromEnum createdFrom = CreatedFromEnum.OptedIn, params KeyValuePair<string,string>[] syncFields)
+        public static AddRecipient Create(string databaseId, CreatedFromEnum createdFrom = CreatedFromEnum.OptedIn, KeyValuePair<string, string>[] columns = null, params KeyValuePair<string, string>[] syncFields)
         {
             if (databaseId == null) throw new ArgumentNullException("databaseId");
 
@@ -48,6 +52,7 @@ namespace Silverpop.Core.XML
             {
                 DatabaseId = databaseId,
                 CreatedFrom = (int)createdFrom,
+                Columns = columns,
                 UpdateIfFound = true,
                 SyncFields = syncFields
             };

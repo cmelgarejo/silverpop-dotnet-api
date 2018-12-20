@@ -24,9 +24,9 @@ namespace Silverpop.Core.XML
 
             else
             {
-                recipientId = xml.Element(XName.Get("RecipientId")).Value;
-                organizationId = xml.Element(XName.Get("ORGANIZATION_ID")).Value;
-                visitorAssociation = xml.Element(XName.Get("VISITOR_ASSOCIATION")).Value;
+                recipientId = bodyXML.Element(XName.Get("RESULT")).Element(XName.Get("RecipientId")).Value;
+                organizationId = bodyXML.Element(XName.Get("RESULT")).Element(XName.Get("ORGANIZATION_ID")).Value;
+                //visitorAssociation = bodyXML.Element(XName.Get("RESULT")).Element(XName.Get("VISITOR_ASSOCIATION")).Value;
             }
             return new AddRecipientResponse()
             {
