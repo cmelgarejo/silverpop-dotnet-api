@@ -24,6 +24,8 @@ namespace Silverpop.Client
         private readonly TransactMessageResponseDecoder _decoder;
         private readonly AddRecipientEncoder _addRecipientEncoder;
         private readonly AddRecipientResponseDecoder _addRecipientDecoder;
+        private readonly SelectRecipientDataEncoder _selectRecipientEncoder;
+        private readonly SelectRecipientDataResponseDecoder _selectRecipientDecoder;
         private readonly LoginEncoder _loginEncoder;
         private readonly LoginResponseDecoder _loginDecoder;
         private readonly Func<ISilverpopCommunicationsClient> _silverpopFactory;
@@ -35,6 +37,8 @@ namespace Silverpop.Client
                 new TransactMessageResponseDecoder(),
                 new AddRecipientEncoder(),
                 new AddRecipientResponseDecoder(),
+                new SelectRecipientDataEncoder(),
+                new SelectRecipientDataResponseDecoder(),
                 new LoginEncoder(),
                 new LoginResponseDecoder(),
                 () => new SilverpopCommunicationsClient(configuration))
@@ -47,6 +51,8 @@ namespace Silverpop.Client
             TransactMessageResponseDecoder decoder,
             AddRecipientEncoder addRecipientEncoder,
             AddRecipientResponseDecoder addRecipientDecoder,
+            SelectRecipientDataEncoder selectRecipientEncoder,
+            SelectRecipientDataResponseDecoder selectRecipientDecoder,
             LoginEncoder loginEncoder,
             LoginResponseDecoder loginDecoder,
             Func<ISilverpopCommunicationsClient> silverpopFactory)
@@ -56,6 +62,8 @@ namespace Silverpop.Client
             _decoder = decoder;
             _addRecipientEncoder = addRecipientEncoder;
             _addRecipientDecoder = addRecipientDecoder;
+            _selectRecipientEncoder = selectRecipientEncoder;
+            _selectRecipientDecoder = selectRecipientDecoder;
             _loginEncoder = loginEncoder;
             _loginDecoder = loginDecoder;
             _silverpopFactory = silverpopFactory;
@@ -89,8 +97,6 @@ namespace Silverpop.Client
         {
             if (contact == null) throw new ArgumentNullException("contact");
 
-            //CheckLogin();
-
             var encodedRecipient = _addRecipientEncoder.Encode(contact);
 
             string response;
@@ -108,8 +114,6 @@ namespace Silverpop.Client
         {
             if (contact == null) throw new ArgumentNullException("contact");
 
-            //CheckLogin();
-
             var encodedRecipient = _addRecipientEncoder.Encode(contact);
 
             string response;
@@ -119,6 +123,40 @@ namespace Silverpop.Client
             }
 
             var decodedResponse = _addRecipientDecoder.Decode(response);
+
+            return decodedResponse;
+        }
+
+        public virtual SelectRecipientDataResponse SelectRecipientData(SelectRecipientData contact)
+        {
+            if (contact == null) throw new ArgumentNullException("contact");
+
+            var encodedRecipient = _selectRecipientEncoder.Encode(contact);
+
+            string response;
+            using (var silverpop = _silverpopFactory())
+            {
+                response = silverpop.HttpUpload(encodedRecipient, true, true, XMLAPISession);
+            }
+
+            var decodedResponse = _selectRecipientDecoder.Decode(response);
+
+            return decodedResponse;
+        }
+
+        public virtual async Task<SelectRecipientDataResponse> SelectRecipientDataAsync(SelectRecipientData contact)
+        {
+            if (contact == null) throw new ArgumentNullException("contact");
+
+            var encodedRecipient = _selectRecipientEncoder.Encode(contact);
+
+            string response;
+            using (var silverpop = _silverpopFactory())
+            {
+                response = await silverpop.HttpUploadAsync(encodedRecipient, true, true, XMLAPISession).ConfigureAwait(false);
+            }
+
+            var decodedResponse = _selectRecipientDecoder.Decode(response);
 
             return decodedResponse;
         }
@@ -206,7 +244,7 @@ namespace Silverpop.Client
 
             using (var silverpop = _silverpopFactory())
             {
-                var batchedMessages = message.GetRecipientBatchedMessages(
+                var batchedMessages = message.SelectRecipientDataBatchedMessages(
                     TransactClientConfiguration.MaxRecipientsPerBatchRequest);
 
                 var identifier = Guid.NewGuid().ToString();
@@ -248,7 +286,7 @@ namespace Silverpop.Client
 
             using (var silverpop = _silverpopFactory())
             {
-                var batchedMessages = message.GetRecipientBatchedMessages(
+                var batchedMessages = message.SelectRecipientDataBatchedMessages(
                     TransactClientConfiguration.MaxRecipientsPerBatchRequest);
 
                 var identifier = Guid.NewGuid().ToString();

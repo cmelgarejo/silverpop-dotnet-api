@@ -44,7 +44,7 @@ namespace Silverpop.Core.XML
             };
         }
 
-        public static AddRecipient Create(string databaseId, CreatedFromEnum createdFrom = CreatedFromEnum.OptedIn, KeyValuePair<string, string>[] columns = null, params KeyValuePair<string, string>[] syncFields)
+        public static AddRecipient Create(string databaseId, CreatedFromEnum createdFrom = CreatedFromEnum.OptedIn, bool updateIfFound = false ,KeyValuePair<string, string>[] columns = null, params KeyValuePair<string, string>[] syncFields)
         {
             if (databaseId == null) throw new ArgumentNullException("databaseId");
 
@@ -53,7 +53,7 @@ namespace Silverpop.Core.XML
                 DatabaseId = databaseId,
                 CreatedFrom = (int)createdFrom,
                 Columns = columns,
-                UpdateIfFound = true,
+                UpdateIfFound = updateIfFound,
                 SyncFields = syncFields
             };
         }

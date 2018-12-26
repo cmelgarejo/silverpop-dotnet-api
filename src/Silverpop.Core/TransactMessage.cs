@@ -27,7 +27,7 @@ namespace Silverpop.Core
 
         public ICollection<TransactMessageRecipient> Recipients { get; set; }
 
-        public IEnumerable<TransactMessage> GetRecipientBatchedMessages(int maxRecipientsPerMessage)
+        public IEnumerable<TransactMessage> SelectRecipientDataBatchedMessages(int maxRecipientsPerMessage)
         {
             if (maxRecipientsPerMessage <= 0)
                 throw new ArgumentOutOfRangeException("maxRecipientsPerMessage");
