@@ -86,8 +86,7 @@ namespace Silverpop.Client
                 }
                 catch (WebException ex)
                 {
-                    var response = ex.Response as HttpWebResponse;
-                    if (response != null && response.StatusCode == HttpStatusCode.Unauthorized)
+                    if (ex.Response is HttpWebResponse response && response.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         _accessTokenProvider.Refresh();
                         return HttpUpload(data, tryRefreshingOAuthAccessToken: false);
@@ -129,8 +128,7 @@ namespace Silverpop.Client
                 {
                     var ex = capturedException.SourceException as WebException;
 
-                    var response = ex.Response as HttpWebResponse;
-                    if (response != null && response.StatusCode == HttpStatusCode.Unauthorized)
+                    if (ex.Response is HttpWebResponse response && response.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         _accessTokenProvider.Refresh();
                         return await HttpUploadAsync(data, tryRefreshingOAuthAccessToken = false).ConfigureAwait(false);

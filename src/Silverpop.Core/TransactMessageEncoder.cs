@@ -40,6 +40,9 @@ namespace Silverpop.Core
 
                 recipientXml.SetElementValue(XName.Get("EMAIL"), recipient.EmailAddress);
 
+                var scriptContext = new XElement(XName.Get("SCRIPT_CONTEXT"), new XCData(recipient.ScriptContext ?? string.Empty));
+                recipientXml.Add(scriptContext);
+
                 var bodyType = recipient.BodyType ?? Constants.TransactMessageBodyTypeDefault;
                 recipientXml.SetElementValue(XName.Get("BODY_TYPE"), bodyType.ToString().ToUpper());
 

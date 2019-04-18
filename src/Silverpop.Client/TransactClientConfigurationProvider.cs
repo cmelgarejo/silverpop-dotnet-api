@@ -56,10 +56,7 @@ namespace Silverpop.Client
 
         public virtual TransactClientConfiguration GetFromConfigurationSection()
         {
-            var configSection = ConfigurationManager.GetSection("transactClientConfiguration")
-                as TransactClientConfigurationSection;
-
-            if (configSection == null)
+            if (!(ConfigurationManager.GetSection("transactClientConfiguration") is TransactClientConfigurationSection configSection))
             {
                 return null;
             }

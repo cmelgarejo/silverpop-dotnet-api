@@ -168,7 +168,9 @@ namespace Silverpop.Client
             SendMessagePreCommunicationVerification(message);
 
             var encodedMessage = _encoder.Encode(message);
-            Console.WriteLine(encodedMessage);
+#if (DEBUG)
+            Console.WriteLine(encodedMessage); //TODO: remove this it's just debug,
+#endif
             string response;
             using (var silverpop = _silverpopFactory())
             {

@@ -12,6 +12,8 @@ namespace Silverpop.Core
             PersonalizationTags = new List<TransactMessageRecipientPersonalizationTag>();
         }
 
+        public string ScriptContext { get; set; }
+
         public string EmailAddress { get; set; }
 
         public TransactMessageRecipientBodyType? BodyType { get; set; }
@@ -47,6 +49,26 @@ namespace Silverpop.Core
                 EmailAddress = emailAddress,
                 BodyType = bodyType,
                 PersonalizationTags = personalizationTags
+            };
+        }
+
+        public static TransactMessageRecipient Create<T>(
+      string emailAddress,
+      T personalizationTagsObject,
+      string scriptContext,
+      TransactMessageRecipientBodyType? bodyType = TransactMessageRecipientBodyType.Html)
+        {
+            if (emailAddress == null)
+                throw new ArgumentNullException(nameof(emailAddress));
+            if ((object)personalizationTagsObject == null)
+                throw new ArgumentNullException(nameof(personalizationTagsObject));
+            IEnumerable<TransactMessageRecipientPersonalizationTag> personalizationTags = TransactMessageRecipient.GetTransactMessageRecipientPersonalizationTags((object)personalizationTagsObject, BindingFlags.Instance | BindingFlags.Public);
+            return new TransactMessageRecipient()
+            {
+                EmailAddress = emailAddress,
+                BodyType = bodyType,
+                PersonalizationTags = personalizationTags,
+                ScriptContext = scriptContext ?? string.Empty
             };
         }
 
