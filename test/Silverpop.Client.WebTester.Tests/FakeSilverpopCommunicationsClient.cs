@@ -5,12 +5,12 @@ namespace Silverpop.Client.WebTester.Tests
 {
     public class FakeSilverpopCommunicationsClient : ISilverpopCommunicationsClient
     {
-        public string HttpUpload(string data, bool tryRefreshingOAuthAccessToken = true)
+        public string HttpUpload(string data, bool tryRefreshingOAuthAccessToken = true, bool useXMLAPI = false, string XMLAPISession = "")
         {
             return null;
         }
 
-        public Task<string> HttpUploadAsync(string data, bool tryRefreshingOAuthAccessToken = true)
+        public Task<string> HttpUploadAsync(string data, bool tryRefreshingOAuthAccessToken = true, bool useXMLAPI = false, string XMLAPISession = "")
         {
             return Task.FromResult(string.Empty);
         }

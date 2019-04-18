@@ -159,6 +159,7 @@ namespace Silverpop.Client.WebTester.Tests.Modules
                                 ? TransactMessageResponseStatus.NoErrorsAllRecipientsSent
                                 : TransactMessageResponseStatus.EncounteredErrorsNoMessagesSent
                         }),
+                        null, null, null, null, null, null,
                         () => new FakeSilverpopCommunicationsClient()));
                 });
 

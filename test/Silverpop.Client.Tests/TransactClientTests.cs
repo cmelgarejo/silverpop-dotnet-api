@@ -1,5 +1,6 @@
 ﻿using Moq;
 using Silverpop.Core;
+using Silverpop.Core.XML;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Xunit;
-
 namespace Silverpop.Client.Tests
 {
     public class TransactClientTests
@@ -75,9 +75,9 @@ namespace Silverpop.Client.Tests
 
                 var exception = Assert.Throws<TransactClientException>(
                     () => new TransactClientTester(configuration: new TransactClientConfiguration()
-                          {
-                              PodNumber = 0
-                          }, decoder: decoder).SendMessage(new TransactMessage()));
+                    {
+                        PodNumber = 0
+                    }, decoder: decoder).SendMessage(new TransactMessage()));
 
                 Assert.Equal("An error occurred.", exception.Message);
                 Assert.Equal("XTMAILING", XDocument.Parse(exception.Request).Root.Name);
@@ -154,7 +154,7 @@ namespace Silverpop.Client.Tests
 
                 Mock.Get(silverpop)
                     .Verify(
-                        x => x.HttpUpload(It.IsAny<string>(), /* tryRefreshingOAuthAccessToken: */ true),
+                        x => x.HttpUpload(It.IsAny<string>(), /* tryRefreshingOAuthAccessToken: */ true, false, ""),
                         Times.Once());
             }
 
@@ -325,7 +325,7 @@ namespace Silverpop.Client.Tests
 
                 Mock.Get(silverpop)
                     .Verify(
-                        x => x.HttpUploadAsync(It.IsAny<string>(), /* tryRefreshingOAuthAccessToken: */ true),
+                        x => x.HttpUploadAsync(It.IsAny<string>(), /* tryRefreshingOAuthAccessToken: */ true, false, ""),
                         Times.Once());
             }
 
@@ -1191,11 +1191,23 @@ namespace Silverpop.Client.Tests
                 TransactClientConfiguration configuration = null,
                 TransactMessageEncoder encoder = null,
                 TransactMessageResponseDecoder decoder = null,
+                AddRecipientEncoder addReciepientEncoder = null,
+                AddRecipientResponseDecoder addReciepientDecoder = null,
+                SelectRecipientDataEncoder selectEncoder = null,
+                SelectRecipientDataResponseDecoder selectDecoder = null,
+                LoginEncoder loginEncoder = null,
+                LoginResponseDecoder loginDecoder = null,
                 Func<ISilverpopCommunicationsClient> silverpopFactory = null)
                 : base(
                     configuration ?? new TransactClientConfiguration(),
                     encoder ?? new TransactMessageEncoder(),
                     decoder ?? new TransactMessageResponseDecoder(),
+                    addReciepientEncoder ?? new AddRecipientEncoder(),
+                    addReciepientDecoder ?? new AddRecipientResponseDecoder(),
+                    selectEncoder ?? new SelectRecipientDataEncoder(),
+                    selectDecoder ?? new SelectRecipientDataResponseDecoder(),
+                    loginEncoder ?? new LoginEncoder(),
+                    loginDecoder ?? new LoginResponseDecoder(),
                     silverpopFactory ?? (() => Mock.Of<ISilverpopCommunicationsClient>()))
             {
             }

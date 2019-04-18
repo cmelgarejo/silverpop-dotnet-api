@@ -21,11 +21,11 @@ namespace Silverpop.Core.Performance
             var stopwatch = Stopwatch.StartNew();
             Console.WriteLine("Stopwatch started.");
 
-            Console.WriteLine("Calling GetRecipientBatchedMessages on constructed message...");
-            var recipientBatchedMesssages = message.GetRecipientBatchedMessages(recipientsPerBatch);
+            // Console.WriteLine("Calling GetRecipientBatchedMessages on constructed message...");
+            // var recipientBatchedMesssages = message.GetRecipientBatchedMessages(recipientsPerBatch);
 
-            Console.WriteLine("{0} messages were generated.", recipientBatchedMesssages.Count());
-            Console.WriteLine();
+            // Console.WriteLine("{0} messages were generated.", recipientBatchedMesssages.Count());
+            // Console.WriteLine();
 
             stopwatch.Stop();
             Console.WriteLine("Operation took {0}", stopwatch.Elapsed.ToString());
