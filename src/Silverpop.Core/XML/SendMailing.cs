@@ -27,15 +27,15 @@ namespace Silverpop.Core.XML
             };
         }
 
-        public static SendMailing Create(string username, string password)
+        public static SendMailing Create(string mailingId, string recipientEmail)
         {
-            if (username == null) throw new ArgumentNullException("username");
-            if (password == null) throw new ArgumentNullException("password");
+            if (mailingId == null) throw new ArgumentNullException("mailingId");
+            if (recipientEmail == null) throw new ArgumentNullException("recipientEmail");
 
             return new SendMailing()
             {
-                MailingId = username,
-                RecipientEmail = password,
+                MailingId = mailingId,
+                RecipientEmail = recipientEmail,
             };
         }
     }

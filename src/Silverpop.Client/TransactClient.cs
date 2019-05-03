@@ -110,16 +110,15 @@ namespace Silverpop.Client
             string response;
             using (var silverpop = _silverpopFactory())
             {
-                response = silverpop.HttpUpload(encodedMessage, true, true);
+                response = silverpop.HttpUpload(encodedMessage, true, true, XMLAPISession);
             }
 
             var decodedResponse = _sendMailingDecoder.Decode(response, encodedMessage);
 
-            if (decodedResponse.Success)
+            if (!decodedResponse.Success)
             {
                 var errorMessage = decodedResponse.ErrorString;
-                throw new TransactClientException(
-                    errorMessage, encodedMessage, decodedResponse.RawResponse);
+                throw new TransactClientException(errorMessage, encodedMessage, decodedResponse.RawResponse);
             }
 
             return decodedResponse;
@@ -134,7 +133,7 @@ namespace Silverpop.Client
             string response;
             using (var silverpop = _silverpopFactory())
             {
-                response = await silverpop.HttpUploadAsync(encodedMessage, true, true);
+                response = await silverpop.HttpUploadAsync(encodedMessage, true, true, XMLAPISession);
             }
 
             var decodedResponse = _sendMailingDecoder.Decode(response, encodedMessage);

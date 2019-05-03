@@ -22,9 +22,12 @@ namespace Silverpop.Core.XML
             string errorString = "", sessionId = "", sessionEncoding = "", organizationId = "";
             if (success)
             {
-                sessionId = resultXML.Element(XName.Get("SESSIONID")).Value;
-                sessionEncoding = resultXML.Element(XName.Get("SESSION_ENCODING")).Value;
-                organizationId = resultXML.Element(XName.Get("ORGANIZATION_ID")).Value;
+                organizationId = bodyXML.Element(XName.Get("ORGANIZATION_ID")).Value;
+            }
+            else
+            {
+                var error = bodyXML.Element(XName.Get("Fault"));
+                errorString = error.Element(XName.Get("FaultString")).Value;
             }
             return new SendMailingResponse()
             {

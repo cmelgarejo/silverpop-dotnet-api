@@ -1198,7 +1198,7 @@ namespace Silverpop.Client.Tests
                 LoginEncoder loginEncoder = null,
                 LoginResponseDecoder loginDecoder = null,
                 SendMailingEncoder sendMailingEncoder = null,
-                SendMailingResponseDecoder sendMailingDncoder = null,
+                SendMailingResponseDecoder sendMailingDecoder = null,
                 Func<ISilverpopCommunicationsClient> silverpopFactory = null)
                 : base(
                     configuration ?? new TransactClientConfiguration(),
@@ -1211,7 +1211,7 @@ namespace Silverpop.Client.Tests
                     loginEncoder ?? new LoginEncoder(),
                     loginDecoder ?? new LoginResponseDecoder(),
                     sendMailingEncoder ?? new SendMailingEncoder(),
-                    sendMailingDncoder ?? new SendMailingResponseDecoder(),
+                    sendMailingDecoder ?? new SendMailingResponseDecoder(),
                     silverpopFactory ?? (() => Mock.Of<ISilverpopCommunicationsClient>()))
             {
             }
