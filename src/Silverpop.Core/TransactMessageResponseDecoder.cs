@@ -7,7 +7,7 @@ namespace Silverpop.Core
 {
     public class TransactMessageResponseDecoder
     {
-        public virtual TransactMessageResponse Decode(string xmlResponse)
+        public virtual TransactMessageResponse Decode(string xmlResponse, string rawRequest = "")
         {
             if (xmlResponse == null) throw new ArgumentNullException("xmlResponse");
 
@@ -18,6 +18,7 @@ namespace Silverpop.Core
 
             return new TransactMessageResponse()
             {
+                RawRequest = rawRequest,
                 RawResponse = xmlResponse,
                 CampaignId = xml.Element(XName.Get("CAMPAIGN_ID")).Value,
                 TransactionId = xml.Element(XName.Get("TRANSACTION_ID")).Value,

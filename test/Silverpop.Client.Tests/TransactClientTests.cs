@@ -65,7 +65,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse()
                     {
                         Status = TransactMessageResponseStatus.EncounteredErrorsNoMessagesSent,
@@ -89,7 +89,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse()
                     {
                         CampaignId = "123",
@@ -144,7 +144,7 @@ namespace Silverpop.Client.Tests
 
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse());
 
                 new TransactClientTester(configuration: new TransactClientConfiguration()
@@ -163,7 +163,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse()
                     {
                         TransactionId = "123"
@@ -182,7 +182,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse());
 
                 var silverpop = Mock.Of<ISilverpopCommunicationsClient>();
@@ -236,7 +236,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse()
                     {
                         Status = TransactMessageResponseStatus.EncounteredErrorsNoMessagesSent,
@@ -260,7 +260,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse()
                     {
                         CampaignId = "123",
@@ -315,7 +315,7 @@ namespace Silverpop.Client.Tests
 
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse());
 
                 await new TransactClientTester(configuration: new TransactClientConfiguration()
@@ -334,7 +334,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse()
                     {
                         TransactionId = "123"
@@ -353,7 +353,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse());
 
                 var silverpop = Mock.Of<ISilverpopCommunicationsClient>();
@@ -470,7 +470,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse());
 
                 var silverpop = Mock.Of<ISilverpopCommunicationsClient>();
@@ -587,7 +587,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse());
 
                 var silverpop = Mock.Of<ISilverpopCommunicationsClient>();
@@ -625,7 +625,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse());
 
                 var silverpop = Mock.Of<ISilverpopCommunicationsClient>();
@@ -670,7 +670,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse()
                     {
                         TransactionId = "123"
@@ -695,7 +695,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse());
 
                 var silverpop = Mock.Of<ISilverpopCommunicationsClient>();
@@ -736,7 +736,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse());
 
                 var silverpop = Mock.Of<ISilverpopCommunicationsClient>();
@@ -781,7 +781,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse()
                     {
                         TransactionId = "123"
@@ -806,7 +806,7 @@ namespace Silverpop.Client.Tests
             {
                 var decoder = Mock.Of<TransactMessageResponseDecoder>();
                 Mock.Get(decoder)
-                    .Setup(x => x.Decode(It.IsAny<string>()))
+                    .Setup(x => x.Decode(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(new TransactMessageResponse());
 
                 var silverpop = Mock.Of<ISilverpopCommunicationsClient>();
@@ -1197,6 +1197,8 @@ namespace Silverpop.Client.Tests
                 SelectRecipientDataResponseDecoder selectDecoder = null,
                 LoginEncoder loginEncoder = null,
                 LoginResponseDecoder loginDecoder = null,
+                SendMailingEncoder sendMailingEncoder = null,
+                SendMailingResponseDecoder sendMailingDncoder = null,
                 Func<ISilverpopCommunicationsClient> silverpopFactory = null)
                 : base(
                     configuration ?? new TransactClientConfiguration(),
@@ -1208,6 +1210,8 @@ namespace Silverpop.Client.Tests
                     selectDecoder ?? new SelectRecipientDataResponseDecoder(),
                     loginEncoder ?? new LoginEncoder(),
                     loginDecoder ?? new LoginResponseDecoder(),
+                    sendMailingEncoder ?? new SendMailingEncoder(),
+                    sendMailingDncoder ?? new SendMailingResponseDecoder(),
                     silverpopFactory ?? (() => Mock.Of<ISilverpopCommunicationsClient>()))
             {
             }

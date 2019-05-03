@@ -28,6 +28,8 @@ namespace Silverpop.Client
         private readonly SelectRecipientDataResponseDecoder _selectRecipientDecoder;
         private readonly LoginEncoder _loginEncoder;
         private readonly LoginResponseDecoder _loginDecoder;
+        private readonly SendMailingEncoder _sendMailingEncoder;
+        private readonly SendMailingResponseDecoder _sendMailingDecoder;
         private readonly Func<ISilverpopCommunicationsClient> _silverpopFactory;
 
         public TransactClient(TransactClientConfiguration configuration)
@@ -41,6 +43,8 @@ namespace Silverpop.Client
                 new SelectRecipientDataResponseDecoder(),
                 new LoginEncoder(),
                 new LoginResponseDecoder(),
+                new SendMailingEncoder(),
+                new SendMailingResponseDecoder(),
                 () => new SilverpopCommunicationsClient(configuration))
         {
         }
@@ -55,6 +59,8 @@ namespace Silverpop.Client
             SelectRecipientDataResponseDecoder selectRecipientDecoder,
             LoginEncoder loginEncoder,
             LoginResponseDecoder loginDecoder,
+            SendMailingEncoder sendMailingEncoder,
+            SendMailingResponseDecoder sendMailingDecoder,
             Func<ISilverpopCommunicationsClient> silverpopFactory)
         {
             Configuration = configuration;
@@ -66,6 +72,8 @@ namespace Silverpop.Client
             _selectRecipientDecoder = selectRecipientDecoder;
             _loginEncoder = loginEncoder;
             _loginDecoder = loginDecoder;
+            _sendMailingEncoder = sendMailingEncoder;
+            _sendMailingDecoder = sendMailingDecoder;
             _silverpopFactory = silverpopFactory;
         }
 
@@ -91,6 +99,54 @@ namespace Silverpop.Client
 
                 XMLAPISession = decodedResponse.Success ? decodedResponse.SessionEncoding : null;
             }
+        }
+
+        public virtual SendMailingResponse SendMailing(SendMailing mailing)
+        {
+            if (mailing == null) throw new ArgumentNullException("mailing");
+
+            var encodedMessage = _sendMailingEncoder.Encode(mailing);
+
+            string response;
+            using (var silverpop = _silverpopFactory())
+            {
+                response = silverpop.HttpUpload(encodedMessage, true, true);
+            }
+
+            var decodedResponse = _sendMailingDecoder.Decode(response, encodedMessage);
+
+            if (decodedResponse.Success)
+            {
+                var errorMessage = decodedResponse.ErrorString;
+                throw new TransactClientException(
+                    errorMessage, encodedMessage, decodedResponse.RawResponse);
+            }
+
+            return decodedResponse;
+        }
+
+        public virtual async Task<SendMailingResponse> SendMailingAsync(SendMailing mailing)
+        {
+            if (mailing == null) throw new ArgumentNullException("mailing");
+
+            var encodedMessage = _sendMailingEncoder.Encode(mailing);
+
+            string response;
+            using (var silverpop = _silverpopFactory())
+            {
+                response = await silverpop.HttpUploadAsync(encodedMessage, true, true);
+            }
+
+            var decodedResponse = _sendMailingDecoder.Decode(response, encodedMessage);
+
+            if (decodedResponse.Success)
+            {
+                var errorMessage = decodedResponse.ErrorString;
+                throw new TransactClientException(
+                    errorMessage, encodedMessage, decodedResponse.RawResponse);
+            }
+
+            return decodedResponse;
         }
 
         public virtual AddRecipientResponse AddRecipient(AddRecipient contact)
@@ -168,16 +224,14 @@ namespace Silverpop.Client
             SendMessagePreCommunicationVerification(message);
 
             var encodedMessage = _encoder.Encode(message);
-#if (DEBUG)
-            Console.WriteLine(encodedMessage); //TODO: remove this it's just debug,
-#endif
+
             string response;
             using (var silverpop = _silverpopFactory())
             {
                 response = silverpop.HttpUpload(encodedMessage);
             }
 
-            var decodedResponse = _decoder.Decode(response);
+            var decodedResponse = _decoder.Decode(response, encodedMessage);
 
             if (decodedResponse.Status == TransactMessageResponseStatus.EncounteredErrorsNoMessagesSent)
             {
@@ -213,7 +267,7 @@ namespace Silverpop.Client
                 response = await silverpop.HttpUploadAsync(encodedMessage).ConfigureAwait(false);
             }
 
-            var decodedResponse = _decoder.Decode(response);
+            var decodedResponse = _decoder.Decode(response, encodedMessage);
 
             if (decodedResponse.Status == TransactMessageResponseStatus.EncounteredErrorsNoMessagesSent)
             {

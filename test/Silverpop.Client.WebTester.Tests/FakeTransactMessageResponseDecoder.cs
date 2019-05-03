@@ -11,7 +11,7 @@ namespace Silverpop.Client.WebTester.Tests
             _response = response;
         }
 
-        public override TransactMessageResponse Decode(string xmlResponse)
+        public override TransactMessageResponse Decode(string xmlResponse, string rawRequest = "")
         {
             return _response;
         }

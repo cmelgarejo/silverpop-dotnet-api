@@ -9,6 +9,7 @@ namespace Silverpop.Core
             RecipientDetails = new List<TransactMessageResponseRecipientDetails>();
         }
 
+        public string RawRequest { get; set; }
         public string RawResponse { get; set; }
 
         public string CampaignId { get; set; }
