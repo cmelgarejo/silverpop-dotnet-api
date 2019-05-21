@@ -34,7 +34,12 @@ namespace Silverpop.Client
                 "https://api{0}.ibmmarketingcloud.com/XMLAPI",
                 configuration.PodNumber);
 
-            _httpClientFactory = () => new HttpClient();
+            _httpClientFactory = () =>
+            {
+                var client = new HttpClient();
+                client.Timeout = new TimeSpan(0, 1, 0);
+                return client;
+            };
 
             _sftpConnectedClientFactory = () =>
             {

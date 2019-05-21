@@ -10,7 +10,7 @@ using Silverpop.Core.XML;
 
 namespace Silverpop.Client
 {
-    public class TransactClient
+    public class TransactClient : IDisposable
     {
         public static readonly string ErrorMissingPodNumber =
             "A valid PodNumber must be provided.";
@@ -75,6 +75,12 @@ namespace Silverpop.Client
             _sendMailingEncoder = sendMailingEncoder;
             _sendMailingDecoder = sendMailingDecoder;
             _silverpopFactory = silverpopFactory;
+        }
+
+        public void Dispose()
+        {
+            var silverpop = _silverpopFactory();
+            silverpop.Dispose();
         }
 
         public TransactClientConfiguration Configuration { get; private set; }
